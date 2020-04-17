@@ -1,0 +1,6 @@
+name: "BedWars"
+version: "0.1-ALPHA"
+main: "de.pierreschwang.bedwars.BedwarsPlugin"
+author: "Pierre Maurice Schwang"
+softdepend:
+  - LuckPerms
