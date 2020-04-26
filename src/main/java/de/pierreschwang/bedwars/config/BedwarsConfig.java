@@ -17,12 +17,17 @@ public class BedwarsConfig extends Config {
         };
     }
 
-    @Comment("Defines how many players are allowed to be online")
-    private int maxPlayers = 12;
-
     @Comment("Defines how many players must be online to start the countdown")
     private int requiredPlayers = 6;
 
+    @Comment("Defines how many teams will exist in the game")
+    private int teamAmount = 4;
 
+    @Comment("Defines how many players are allowed to be online")
+    private int playersPerTeam = 3;
+
+    public int getMaxPlayers() {
+        return teamAmount * playersPerTeam;
+    }
 
 }

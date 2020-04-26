@@ -2,7 +2,9 @@ package de.pierreschwang.bedwars.listener;
 
 import de.pierreschwang.bedwars.BedwarsPlugin;
 import de.pierreschwang.bedwars.game.GameState;
+import de.pierreschwang.bedwars.game.Teams;
 import de.pierreschwang.bedwars.player.BedwarsPlayer;
+import de.pierreschwang.bedwars.util.InventoryMenu;
 import de.pierreschwang.bedwars.util.ItemFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,16 +26,17 @@ public class PlayerJoinListener implements Listener {
         if (Bukkit.getOnlinePlayers().size() >= bedwarsPlugin.getBedwarsConfig().getMaxPlayers()) {
             event.setResult(PlayerLoginEvent.Result.KICK_FULL);
         }
-        bedwarsPlugin.getPlayers().put(event.getPlayer(), new BedwarsPlayer(bedwarsPlugin, event.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        BedwarsPlayer player = bedwarsPlugin.getPlayer(event.getPlayer());
+        BedwarsPlayer player = bedwarsPlugin.getUser(event.getPlayer());
+        bedwarsPlugin.getGame().getTeams().get(Teams.BLUE).getMembers().add(bedwarsPlugin.getUser(event.getPlayer()));
+        bedwarsPlugin.getGame().setCurrentState(GameState.INGAME);
         if (bedwarsPlugin.getGame().getCurrentState() == GameState.LOBBY) {
-            bedwarsPlugin.getOnlinePlayers().forEach(players -> players.sendMessage("player-join", player.getColoredName()));
-            event.getPlayer().getInventory().setItem(0, new ItemFactory(Material.BED).name("§cTeam wählen").apply());
+            bedwarsPlugin.getUserRepository().getUsers().values().forEach(players -> players.sendMessage("player-join", player.getColoredName()));
+            event.getPlayer().getInventory().setItem(0, new ItemFactory(Material.BED).name(player.getMessage("item-team-chooser-title")).apply());
         }
     }
 
